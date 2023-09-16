@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.SmartLifecycle;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
@@ -26,7 +27,11 @@ public class SignInServiceImpl implements SignInService, SmartLifecycle {
         manager.getHandlers().forEach(new Consumer<SignInHandler>() {
             @Override
             public void accept(SignInHandler handler) {
-                handler.signIn();
+                try {
+                    handler.signIn();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         });
         log.info("今天的签到任务执行完成!");

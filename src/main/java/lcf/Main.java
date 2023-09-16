@@ -4,6 +4,7 @@ import ch.qos.logback.core.util.TimeUtil;
 import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.channel.EventLoopGroup;
 import lcf.application.ShutdownHook;
+import lcf.signIn.handler.impl.HDChinaSignInHandler;
 import lcf.util.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
