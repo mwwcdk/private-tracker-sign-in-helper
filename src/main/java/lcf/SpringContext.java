@@ -1,6 +1,8 @@
 package lcf;
 
 import io.netty.channel.EventLoopGroup;
+import lcf.push.wechat.service.WechatPushService;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -39,6 +41,22 @@ public class SpringContext implements ApplicationContextAware {
 
     public static EventLoopGroup getEventLoopGroup() {
         return instance.eventLoopGroup;
+    }
+
+    /** 微信推送服务 */
+    @Autowired
+    private WechatPushService wechatPushService;
+
+    public static WechatPushService getWechatPushService() {
+        return instance.wechatPushService;
+    }
+
+    /** HTTP客户端 */
+    @Autowired
+    private CloseableHttpClient httpClient;
+
+    public static CloseableHttpClient getHttpClient() {
+        return instance.httpClient;
     }
 
 }
