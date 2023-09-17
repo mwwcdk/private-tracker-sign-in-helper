@@ -5,6 +5,7 @@ import io.netty.channel.DefaultEventLoopGroup;
 import io.netty.channel.EventLoopGroup;
 import lcf.application.ShutdownHook;
 import lcf.signIn.handler.impl.HDChinaSignInHandler;
+import lcf.signIn.service.SignInService;
 import lcf.util.TimeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -36,6 +37,9 @@ public class Main {
             // 添加程序关闭钩子
             Runtime.getRuntime().addShutdownHook(new ShutdownHook());
             log.info("恭喜 程序启动成功! 耗时:{}ms", System.currentTimeMillis() - startTime);
+
+            SpringContext.getApplicationContext().getBean(SignInService.class).signIn();
+
         } catch (Throwable e) {
             log.error("程序启动失败o(╥﹏╥)o", e);
             Runtime.getRuntime().exit(1);

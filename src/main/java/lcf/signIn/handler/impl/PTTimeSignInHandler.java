@@ -17,7 +17,7 @@ public class PTTimeSignInHandler implements SignInHandler {
 
     @Override
     public String getURI() {
-        return "https://www.pttime.org/attendance.php?uid=81799";
+        return "https://www.pttime.org/attendance.php";
     }
 
     @Override

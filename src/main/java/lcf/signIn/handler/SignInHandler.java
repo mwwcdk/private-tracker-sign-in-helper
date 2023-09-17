@@ -1,11 +1,15 @@
 package lcf.signIn.handler;
 
 import lcf.signIn.constant.PrivateTrackerSite;
+import lcf.signIn.model.SignInResult;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
@@ -13,6 +17,8 @@ import java.io.IOException;
  * 签到处理器
  */
 public interface SignInHandler {
+
+    static final Logger LOGGER = LoggerFactory.getLogger(SignInHandler.class);
 
     /**
      * 获取站点
@@ -22,8 +28,10 @@ public interface SignInHandler {
 
     /**
      * 签到
+     *
+     * @return
      */
-    default void signIn() throws IOException {
+    default SignInResult signIn() throws IOException {
         RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(20000).setConnectTimeout(20000).build();
         HttpGet httpGet = new HttpGet(getURI());
         httpGet.setConfig(requestConfig);
@@ -43,11 +51,36 @@ public interface SignInHandler {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response;
         response = httpClient.execute(httpGet);
-        if (response.getStatusLine().getStatusCode() == 200) {
-            System.out.println(getSite() + " 签到成功");
-        } else {
-            System.out.println(getSite() + "\t签到出现异常 未签到成功\t" + response.getStatusLine().getStatusCode());
+        // 处理HTTP响应
+        return handleHttpResponse(response);
+    }
+
+    /**
+     * 处理HTTP响应
+     * @param httpResponse
+     * @return
+     */
+    default SignInResult handleHttpResponse(CloseableHttpResponse httpResponse) throws IOException {
+        SignInResult result = new SignInResult();
+        // 失败
+        if (httpResponse.getStatusLine().getStatusCode() != 200) {
+            result.setSuccess(false);
+            result.setTips(httpResponse.getStatusLine().getStatusCode() + " " + httpResponse.getStatusLine().getReasonPhrase());
+            return result;
         }
+        // 成功
+        result.setSuccess(true);
+        result.setTips(getSuccessTips(httpResponse));
+        return result;
+    }
+
+    /**
+     * 获取签到成功的提示
+     * @param httpResponse
+     * @return
+     */
+    default String getSuccessTips(CloseableHttpResponse httpResponse) throws IOException {
+        return EntityUtils.toString(httpResponse.getEntity());
     }
 
     /**

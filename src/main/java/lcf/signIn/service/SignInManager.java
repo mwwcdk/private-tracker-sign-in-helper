@@ -33,6 +33,11 @@ public class SignInManager {
                 throw new IllegalStateException("SignInHandler发现重复的site! repeatedSite:" + handler.getSite());
             }
         });
+        for (PrivateTrackerSite site : PrivateTrackerSite.values()) {
+            if (site2Handler.get(site) == null) {
+                throw new IllegalStateException("这个PT站没找到对应的签到处理器! site:" + site);
+            }
+        }
         this.site2Handler = site2Handler;
     }
 
