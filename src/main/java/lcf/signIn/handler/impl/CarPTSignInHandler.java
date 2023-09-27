@@ -37,8 +37,8 @@ public class CarPTSignInHandler implements SignInHandler {
     }
 
     @Override
-    public String getSuccessTips(CloseableHttpResponse httpResponse) throws IOException {
-        Matcher matcher = PATTERN.matcher(EntityUtils.toString(httpResponse.getEntity()));
+    public String getSuccessTips(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
+        Matcher matcher = PATTERN.matcher(responseEntity);
         if (matcher.find()) {
             return matcher.group(0).replaceAll("<p>", "").replaceAll("<b>", "").replaceAll("</b>", "").replaceAll(" ", "");
         }

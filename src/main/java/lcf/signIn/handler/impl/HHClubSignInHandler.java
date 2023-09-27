@@ -29,7 +29,7 @@ public class HHClubSignInHandler implements SignInHandler {
     }
 
     @Override
-    public String getSuccessTips(CloseableHttpResponse httpResponse) throws IOException {
-        return SignInHandler.super.getSuccessTips(httpResponse);
+    public String getSuccessTips(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
+        return SignInHandler.super.getSuccessTips(httpResponse, responseEntity);
     }
 }

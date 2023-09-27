@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class HDCitySignInHandler implements SignInHandler {
 
     /** 用于从HTTP响应中提取信息的正则表达式 */
-    private static final Pattern PATTERN = Pattern.compile("今天已经签过到~</span> </h1><p>本次签到获得魅力.*</p>");
+    private static final Pattern PATTERN = Pattern.compile("<h1><span class=\"colored\">今天已经签过到~</span> 今日签到时幸运地获得 .* 魅力值。</h1>");
 
     @Override
     public PrivateTrackerSite getSite() {
@@ -35,10 +35,10 @@ public class HDCitySignInHandler implements SignInHandler {
     }
 
     @Override
-    public String getSuccessTips(CloseableHttpResponse httpResponse) throws IOException {
-        Matcher matcher = PATTERN.matcher(EntityUtils.toString(httpResponse.getEntity()));
+    public String getSuccessTips(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
+        Matcher matcher = PATTERN.matcher(responseEntity);
         if (matcher.find()) {
-            return matcher.group(0).replaceAll("</span> </h1><p>", "").replaceAll("</p>", "");
+            return matcher.group(0).replaceAll("<h1><span class=\"colored\">今天已经签过到~</span> ", "").replaceAll("。</h1>", "");
         }
         return "";
     }

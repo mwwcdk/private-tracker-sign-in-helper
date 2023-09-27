@@ -2,13 +2,11 @@ package lcf.signIn.handler.impl;
 
 import lcf.signIn.constant.PrivateTrackerSite;
 import lcf.signIn.handler.SignInHandler;
-import org.apache.commons.codec.Charsets;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 
 /**
  * 瓷器 签到处理器
@@ -32,8 +30,8 @@ public class HDChinaSignInHandler implements SignInHandler {
     }
 
     @Override
-    public String getSuccessTips(CloseableHttpResponse httpResponse) throws IOException {
-        return EntityUtils.toString(httpResponse.getEntity());
+    public String getSuccessTips(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
+        return responseEntity;
     }
 
 }

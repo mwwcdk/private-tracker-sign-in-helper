@@ -3,15 +3,21 @@ package lcf.signIn.handler.impl;
 import lcf.signIn.constant.PrivateTrackerSite;
 import lcf.signIn.handler.SignInHandler;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.util.EntityUtils;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 馒头 签到处理器
  */
 @Component
 public class MTeamSignInHandler implements SignInHandler {
+
+    /** 用于从HTTP响应中提取信息的正则表达式 */
+    private static final Pattern PATTERN = Pattern.compile(">使用</a>]: .* <font class = ");
 
     @Override
     public PrivateTrackerSite getSite() {
@@ -29,8 +35,12 @@ public class MTeamSignInHandler implements SignInHandler {
     }
 
     @Override
-    public String getSuccessTips(CloseableHttpResponse httpResponse) throws IOException {
-        return "提示:馒头无签到功能, 访问主页避免封号";
+    public String getSuccessTips(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
+        Matcher matcher = PATTERN.matcher(responseEntity);
+        if (matcher.find()) {
+            return "当前魔力值:" + matcher.group(0).replaceAll(">使用</a>]: ", "").replaceAll(" <font class = ", "");
+        }
+        return "";
     }
 
 }

@@ -51,17 +51,24 @@ public interface SignInHandler {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response;
         response = httpClient.execute(httpGet);
+        // HTTP响应的实体字符串
+        String responseEntity = EntityUtils.toString(response.getEntity());
         // 处理HTTP响应
-        return handleHttpResponse(response);
+        return handleHttpResponse(response, responseEntity);
     }
 
     /**
      * 处理HTTP响应
+     *
      * @param httpResponse
+     * @param responseEntity
      * @return
      */
-    default SignInResult handleHttpResponse(CloseableHttpResponse httpResponse) throws IOException {
+    default SignInResult handleHttpResponse(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
         SignInResult result = new SignInResult();
+
+        LOGGER.info("{}的response:{}", getSite(), responseEntity);
+
         // 失败
         if (httpResponse.getStatusLine().getStatusCode() != 200) {
             result.setSuccess(false);
@@ -70,17 +77,19 @@ public interface SignInHandler {
         }
         // 成功
         result.setSuccess(true);
-        result.setTips(getSuccessTips(httpResponse));
+        result.setTips(getSuccessTips(httpResponse, responseEntity));
         return result;
     }
 
     /**
      * 获取签到成功的提示
+     *
      * @param httpResponse
+     * @param responseEntity
      * @return
      */
-    default String getSuccessTips(CloseableHttpResponse httpResponse) throws IOException {
-        return EntityUtils.toString(httpResponse.getEntity());
+    default String getSuccessTips(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
+        return responseEntity;
     }
 
     /**
