@@ -1,6 +1,8 @@
 # private-tracker-sign-in-helper
 PT网站自动签到
 
+目前实现的功能：每日00:05自动完成多个PT网站的签到，并将签到结果推送至你的微信。
+  
 clone该项目部署至自己的服务器即可实现PT站自动签到。  
   
 技术栈: Java + HTTP  
