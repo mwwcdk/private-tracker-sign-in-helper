@@ -6,12 +6,17 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 憨憨俱乐部 签到处理器
  */
 @Component
 public class HHClubSignInHandler implements SignInHandler {
+
+    /** 用于从HTTP响应中提取信息的正则表达式 */
+    private static final Pattern PATTERN = Pattern.compile("这是您的第.*次签到，已连续签到.*天，本次签到获得.*个憨豆。");
 
     @Override
     public PrivateTrackerSite getSite() {
@@ -30,6 +35,11 @@ public class HHClubSignInHandler implements SignInHandler {
 
     @Override
     public String getSuccessTips(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
-        return SignInHandler.super.getSuccessTips(httpResponse, responseEntity);
+        Matcher matcher = PATTERN.matcher(responseEntity);
+        if (matcher.find()) {
+            return matcher.group(0);
+        }
+        return "";
     }
+
 }

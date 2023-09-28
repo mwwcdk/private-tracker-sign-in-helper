@@ -45,9 +45,8 @@ public class Main {
             Runtime.getRuntime().addShutdownHook(new ShutdownHook());
             log.info("恭喜 程序启动成功! 耗时:{}ms", System.currentTimeMillis() - startTime);
 
-            SignInResult signInResult = SpringContext.getApplicationContext().getBean(HHClubSignInHandler.class).signIn();
-            log.info("站点:{} \n签到结果:{}\n{}", PrivateTrackerSite.HHClub, signInResult.isSuccess()? "成功" : "失败", signInResult.getTips());
-
+//            SpringContext.getApplicationContext().getBean(SignInService.class).signIn();
+//            SpringContext.getWechatPushService().send("huoo", "jjjajaja");
 
         } catch (Throwable e) {
             log.error("程序启动失败o(╥﹏╥)o", e);

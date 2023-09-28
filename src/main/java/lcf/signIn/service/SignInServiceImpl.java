@@ -21,15 +21,18 @@ public class SignInServiceImpl implements SignInService, SmartLifecycle {
     @Override
     public void signIn() {
         log.info("开始执行今天的签到任务...");
+        StringBuilder wechatPushStr = new StringBuilder();
         manager.getHandlers().forEach(handler -> {
             try {
                 SignInResult result = handler.signIn();
                 log.info("站点:{} \n签到结果:{}\n{}", handler.getSite(), result.isSuccess()? "成功" : "失败", result.getTips());
+                wechatPushStr.append("站点:").append(handler.getSite()).append("\n").append("签到结果:").append(result.isSuccess()? "成功" : "失败").append("\n").append("tips:").append(result.getTips()).append("\n\n");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
         log.info("今天的签到任务执行完成!");
+        SpringContext.getWechatPushService().send("PT站自动签到情况", wechatPushStr.toString());
     }
 
     @Override

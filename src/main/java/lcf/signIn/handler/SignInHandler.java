@@ -5,6 +5,7 @@ import lcf.signIn.model.SignInResult;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -47,7 +48,7 @@ public interface SignInHandler {
         httpGet.addHeader("sec-fetch-site", "none");
         httpGet.addHeader("sec-fetch-user", "?1");
         httpGet.addHeader("upgrade-insecure-requests", "1");
-        httpGet.addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36");
+        httpGet.addHeader("user-agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36");
         CloseableHttpClient httpClient = HttpClients.createDefault();
         CloseableHttpResponse response;
         response = httpClient.execute(httpGet);
@@ -67,7 +68,7 @@ public interface SignInHandler {
     default SignInResult handleHttpResponse(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
         SignInResult result = new SignInResult();
 
-        LOGGER.info("{}的response:{}", getSite(), responseEntity);
+//        LOGGER.info("{}的response:{}", getSite(), responseEntity);
 
         // 失败
         if (httpResponse.getStatusLine().getStatusCode() != 200) {

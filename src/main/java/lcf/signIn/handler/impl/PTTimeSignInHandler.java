@@ -15,8 +15,11 @@ import java.util.regex.Pattern;
 @Component
 public class PTTimeSignInHandler implements SignInHandler {
 
-    /** 用于从HTTP响应中提取信息的正则表达式 */
-    private static final Pattern PATTERN = Pattern.compile("这是你的第 <b>.*</b> 个魔力值。");
+    /** 用于从HTTP响应中提取信息的正则表达式（正常版本） */
+    private static final Pattern NORMAL_PATTERN = Pattern.compile("这是你的第 <b>.*</b> 个魔力值。");
+
+    /** 用于从HTTP响应中提取信息的正则表达式（非首次请求） */
+    private static final Pattern REPEAT_PATTERN = Pattern.compile("今天已签到，请勿重复刷新");
 
     @Override
     public PrivateTrackerSite getSite() {
@@ -35,9 +38,13 @@ public class PTTimeSignInHandler implements SignInHandler {
 
     @Override
     public String getSuccessTips(CloseableHttpResponse httpResponse, String responseEntity) throws IOException {
-        Matcher matcher = PATTERN.matcher(responseEntity);
+        Matcher matcher = NORMAL_PATTERN.matcher(responseEntity);
         if (matcher.find()) {
             return matcher.group(0).replaceAll("<b> ", "").replaceAll("</b>", "");
+        }
+        matcher = REPEAT_PATTERN.matcher(responseEntity);
+        if (matcher.find()) {
+            return matcher.group(0);
         }
         return "";
     }
